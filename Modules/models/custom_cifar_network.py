@@ -2,8 +2,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes=10):
         super(Net, self).__init__()
+        self.num_classes = num_classes
+        
         self.conv1 = nn.Conv2d(3, 32, 3) # 30
         self.relu1 = nn.ReLU()
         self.bn1 = nn.BatchNorm2d(32)
@@ -42,7 +44,7 @@ class Net(nn.Module):
         self.relu9 = nn.ReLU()
         self.bn9 = nn.BatchNorm2d(128)
 
-        self.conv10 = nn.Conv2d(128, 10, 1) # 5
+        self.conv10 = nn.Conv2d(128, self.num_classes, 1) # 5
         
         self.gap = nn.AdaptiveAvgPool2d(1) # 1
         
@@ -66,6 +68,6 @@ class Net(nn.Module):
         x = self.conv10(x)
         x = self.gap(x)
         
-        x = x.view(-1, 10)
+        x = x.view(-1, self.num_classes)
         
         return x
